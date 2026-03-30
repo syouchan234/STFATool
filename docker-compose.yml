@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  db:
+    image: mariadb:10.5
+    container_name: staft_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: staft_db
+      MYSQL_USER: staft_user
+      MYSQL_PASSWORD: staft_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - staft_network
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: staft_php
+    ports:
+      - "8080:80"
+    volumes:
+      - ./api:/var/www/html/api
+    depends_on:
+      - db
+    networks:
+      - staft_network
+
+  react:
+    build:
+      context: .
+      dockerfile: docker/react/Dockerfile
+    container_name: staft_react
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - staft_network
+
+volumes:
+  db_data:
+
+networks:
+  staft_network:

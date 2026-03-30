@@ -16,7 +16,7 @@
    - 共通処理（DB接続、レスポンス成形、認証チェック）は `api/common/` に集約してください。
    - セッション管理は `HttpOnly` Cookie を使用。将来のトークン認証（JWT等）への移行を考慮し、認証ロジックを独立させてください。
 
-2. **Frontend (React/Tailwind CSS)**:
+2. **Frontend (React/CSS)**:
    - モバイルファースト設計。PC（グリッド）とスマホ（リスト）で表示ロジックを切り替えるレスポンスUIを徹底してください。
    - APIリクエスト時は `credentials: 'include'` を必須とし、APIベースURLを変数管理してください。
 
