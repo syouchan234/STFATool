@@ -1,4 +1,7 @@
 <?php
+/**
+ * 認証中ユーザー情報取得API
+ */
 declare(strict_types=1);
 
 require_once __DIR__ . '/../../../api/common/db.php';

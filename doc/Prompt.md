@@ -41,6 +41,10 @@
    - ディレクトリは `getInfo/` (GET) と `postInfo/` (POST) で物理分離。
    - 出力はすべてJSON。HTMLの混入は厳禁。
 4. **DRY & Strict**: `declare(strict_types=1);` を必須とし、共通処理は `api/common/` に集約。
+5. **Security**: SQLインジェクション対策は必須。セッション管理はHttpOnly Cookieを使用。
+6. **Frontend**: モバイルファースト設計。API通信は `credentials: 'include'` を必須とし、ベースURLは変数管理。
+7. **Database**: 厳格な型定義と外部キー制約を設定。インデックス設計も適切に行う。
+8. 論理処理の前後には必ず処理の意味のコメントを付与してください。
 
 # Instruction
 上記規約を前提に、まずは `api/common/db.php` と `api/common/resp.php` の基盤コードを作成してください。

@@ -1,4 +1,7 @@
 <?php
+/**
+ * ログイン処理（メール or ユーザーID + パスワード認証）
+ */
 declare(strict_types=1);
 
 require_once __DIR__ . '/../../../api/common/db.php';
