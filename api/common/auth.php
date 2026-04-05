@@ -108,7 +108,7 @@ class Auth
             return null;
         }
 
-        $stmt = $pdo->prepare('SELECT id, username, email, created_at FROM users WHERE id = ?');
+        $stmt = $pdo->prepare('SELECT id, name, email, role_id, created_at FROM users WHERE id = ?');
         $stmt->execute([$userId]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 

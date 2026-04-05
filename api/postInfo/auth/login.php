@@ -19,18 +19,16 @@ if (!is_array($data)) {
     Response::error('JSONパースエラー', 400);
 }
 
-$mode = trim((string)($data['mode'] ?? ''));
-$identifier = trim((string)($data['identifier'] ?? ''));
+$email = trim((string)($data['email'] ?? ''));
 $password = (string)($data['password'] ?? '');
 
-if (!in_array($mode, ['email', 'username'], true) || $identifier === '' || $password === '') {
-    Response::error('mode=email|username、identifier、passwordが必須です', 400);
+if ($email === '' || $password === '') {
+    Response::error('emailとpasswordが必須です', 400);
 }
 
 $pdo = Database::getConnection();
-$field = ($mode === 'email') ? 'email' : 'username';
-$stmt = $pdo->prepare("SELECT id, username, email, password_hash FROM users WHERE {$field} = ? LIMIT 1");
-$stmt->execute([$identifier]);
+$stmt = $pdo->prepare("SELECT u.id, u.name, u.email, u.password_hash, r.name as role FROM users u JOIN roles r ON u.role_id = r.id WHERE u.email = ? AND u.is_active = 1 LIMIT 1");
+$stmt->execute([$email]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$user || !password_verify($password, (string)$user['password_hash'])) {
@@ -40,7 +38,9 @@ if (!$user || !password_verify($password, (string)$user['password_hash'])) {
 Auth::login((int)$user['id']);
 
 Response::success([
-    'id' => (int)$user['id'],
-    'username' => (string)$user['username'],
-    'email' => (string)$user['email'],
+    'user' => [
+        'id' => (int)$user['id'],
+        'name' => (string)$user['name'],
+        'role' => (string)$user['role'],
+    ]
 ]);

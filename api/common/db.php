@@ -15,11 +15,11 @@ class Database {
      */
     public static function getConnection(): PDO {
         if (self::$pdo === null) {
-            // データベース設定（将来的には環境変数から取得）
-            $host = 'localhost';
-            $dbname = 'staft_db'; // 仮のデータベース名
-            $username = 'root';
-            $password = '';
+            // データベース設定（Docker環境用）
+            $host = 'db';
+            $dbname = 'staft_db';
+            $username = 'staft_user';
+            $password = 'staft_password';
 
             $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8mb4";
             $options = [

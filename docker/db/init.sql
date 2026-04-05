@@ -39,6 +39,20 @@ CREATE TABLE shifts (
     UNIQUE(staff_id, date, start_time, end_time)
 );
 
+CREATE TABLE requests (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    staff_id INT NOT NULL,
+    date DATE NOT NULL,
+    request_type ENUM('holiday', 'off', 'work') NOT NULL,
+    message TEXT,
+    status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+    manager_id INT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (staff_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (manager_id) REFERENCES users(id)
+);
+
 -- 初期ユーザーセット
 -- 管理者 (role_id=3)
 INSERT INTO users (name, email, password_hash, role_id)

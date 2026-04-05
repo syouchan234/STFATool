@@ -16,12 +16,12 @@ if (!is_array($data)) {
     Response::error('JSONパースエラー', 400);
 }
 
-$username = trim((string)($data['username'] ?? ''));
+$name = trim((string)($data['name'] ?? ''));
 $email = trim((string)($data['email'] ?? ''));
 $password = (string)($data['password'] ?? '');
 
-if ($username === '' || $email === '' || $password === '') {
-    Response::error('username, email, passwordは必須です', 400);
+if ($name === '' || $email === '' || $password === '') {
+    Response::error('name, email, passwordは必須です', 400);
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -31,15 +31,15 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 $pdo = Database::getConnection();
 
 try {
-    $stmt = $pdo->prepare('INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)');
+    $stmt = $pdo->prepare('INSERT INTO users (name, email, password_hash, role_id) VALUES (?, ?, ?, 1)');
     $hash = password_hash($password, PASSWORD_DEFAULT);
-    $stmt->execute([$username, $email, $hash]);
+    $stmt->execute([$name, $email, $hash]);
 
     $userId = (int)$pdo->lastInsertId();
-    Response::success(['id' => $userId, 'username' => $username, 'email' => $email], 201);
+    Response::success(['id' => $userId, 'name' => $name, 'email' => $email], 201);
 } catch (PDOException $e) {
     if ($e->errorInfo[1] === 1062) {
-        Response::error('ユーザー名またはメールアドレスが既に存在します', 409);
+        Response::error('名前またはメールアドレスが既に存在します', 409);
     }
 
     Response::error('データベースエラー: ' . $e->getMessage(), 500);

@@ -5,6 +5,7 @@ RUN docker-php-ext-install pdo pdo_mysql
 
 # Apacheの設定
 RUN a2enmod rewrite
+RUN a2enmod headers
 
 # 作業ディレクトリを設定
 WORKDIR /var/www/html
